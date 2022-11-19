@@ -38,7 +38,7 @@ variable "subnets" {
         
     nsgs = optional(list(object({
       name                = string
-      resource_group_name = string
+      # resource_group_name = string
     })), [])
 
     route_tables = optional(list(object({

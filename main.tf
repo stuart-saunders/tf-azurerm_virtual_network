@@ -20,7 +20,8 @@ resource "azurerm_virtual_network" "this" {
 }
 
 resource "azurerm_virtual_network_dns_servers" "this" {
-  count = length(var.dns_servers) > 0 ? 1 : 0
+  # count = length(var.dns_servers) > 0 ? 1 : 0
+  for_each = length(var.dns_servers) > 0 ? [1] : []
 
   virtual_network_id = azurerm_virtual_network.this.id
   dns_servers        = var.dns_servers
@@ -39,6 +40,7 @@ resource "azurerm_subnet" "this" {
 
     content {
       name = each.value.delegation.name
+      
       service_delegation {
         name    = each.value.delegation.service_delegation.name
         actions = each.value.delegation.service_delegation.actions
@@ -51,13 +53,6 @@ resource "azurerm_subnet" "this" {
 
   service_endpoints = each.value.service_endpoints
   #service_endpoint_policy_ids = each.value.service_endpoint_policy_ids
-}
-
-resource "azurerm_subnet_network_security_group_association" "this" {
-  for_each = local.nsg_associations
-
-  network_security_group_id = data.azurerm_network_security_group.this[each.key].id
-  subnet_id                 = azurerm_subnet.this[each.value.subnet_name].id
 }
 
 resource "azurerm_subnet_route_table_association" "vnet" {

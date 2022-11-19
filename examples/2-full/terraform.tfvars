@@ -23,10 +23,38 @@ subnets = [
     name             = "subnet-with-nsg"
     address_prefixes = ["10.0.1.0/24"]
     nsgs = [
+      # {
+      #   name = "nsg0"
+      #   resource_group_name = "rg-vnet-module-test"
+      # }
       {
         name = "nsg0"
-        resource_group_name = "rg-vnet-module-test"
-      }
+        #resource_group_name = "rg-vnet-module-test"
+        rules = [
+          {
+            name                       = "winrm",
+            priority                   = "1001"
+            direction                  = "Inbound"
+            access                     = "Allow"
+            protocol                   = "tcp"
+            source_port_range          = "*"
+            destination_port_range     = "5985"
+            source_address_prefix      = "VirtualNetwork"
+            destination_address_prefix = "VirtualNetwork"
+          },
+          {
+            name                       = "web-inbound-http",
+            priority                   = "1002"
+            direction                  = "Inbound"
+            access                     = "Allow"
+            protocol                   = "tcp"
+            source_port_range          = "*"
+            destination_port_range     = "80"
+            source_address_prefix      = "*"
+            destination_address_prefix = "VirtualNetwork"
+          }
+        ] 
+      },
     ]
   },
   {
