@@ -55,9 +55,9 @@ resource "azurerm_subnet" "this" {
   #service_endpoint_policy_ids = each.value.service_endpoint_policy_ids
 }
 
-resource "azurerm_subnet_route_table_association" "vnet" {
-  for_each = local.route_table_associations
+# resource "azurerm_subnet_route_table_association" "vnet" {
+#   for_each = local.route_table_associations
 
-  route_table_id = data.azurerm_route_table.this[each.key].id
-  subnet_id      = azurerm_subnet.this[each.value.subnet_name].id
-}
+#   route_table_id = data.azurerm_route_table.this[each.key].id
+#   subnet_id      = azurerm_subnet.this[each.value.subnet_name].id
+# }

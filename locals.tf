@@ -20,7 +20,7 @@ locals {
     {
       for rule_value in nsg_value.nsg_rules :
         "${nsg_value.name}_${rule_value.name}" => {
-          subnet_name = subnet_value.name
+          subnet_name = nsg_value.name
           nsg_key     = nsg_key
           nsg_name    = nsg_value.name
           rule_name   = rule_value.name

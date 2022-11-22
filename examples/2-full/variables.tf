@@ -22,7 +22,7 @@ variable "subnets" {
   type = list(object({
     name             = string
     address_prefixes = list(string)
-    
+
     delegation = optional(object({
       name = string
       service_delegation = object({
@@ -33,12 +33,23 @@ variable "subnets" {
 
     private_endpoint_network_policies_enabled     = optional(bool, true)
     private_link_service_network_policies_enabled = optional(bool, true)
-    
-    service_endpoints                             = optional(list(string), null)
-        
+
+    service_endpoints = optional(list(string), null)
+
     nsgs = optional(list(object({
-      name                = string
-      # resource_group_name = string
+      name = string
+      rules = list(object({
+        name                       = string
+        priority                   = string
+        direction                  = string
+        access                     = string
+        protocol                   = string
+        source_port_range          = string
+        destination_port_range     = string
+        source_address_prefix      = string
+        destination_address_prefix = string
+      }))
+
     })), [])
 
     route_tables = optional(list(object({
@@ -49,8 +60,8 @@ variable "subnets" {
   description = "The Subnet(s) to create within the Virtual Network"
 }
 
-variable subnet_nsg_map {
-  type = map(string)
+variable "subnet_nsg_map" {
+  type        = map(string)
   description = "A map of Subnet and NSG names"
-  default = { }
+  default     = {}
 }

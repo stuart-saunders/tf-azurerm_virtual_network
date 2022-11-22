@@ -7,7 +7,7 @@ address_space        = ["10.0.0.0/16"]
 subnets = [
   {
     name             = "delegated-subnet"
-    address_prefixes = ["10.0.0.0/24"]   
+    address_prefixes = ["10.0.0.0/24"]
     delegation = {
       name = "container-instance-delegation"
       service_delegation = {
@@ -53,7 +53,7 @@ subnets = [
             source_address_prefix      = "*"
             destination_address_prefix = "VirtualNetwork"
           }
-        ] 
+        ]
       },
     ]
   },
@@ -62,14 +62,14 @@ subnets = [
     address_prefixes = ["10.0.2.0/24"]
     route_tables = [
       {
-        name = "rt0"
+        name                = "rt0"
         resource_group_name = "rg-vnet-module-test"
       }
     ]
   },
   {
-    name             = "subnet-with-service-endpoint"
-    address_prefixes = ["10.0.3.0/24"]
-    service_endpoints = [ "Microsoft.Storage" ]
+    name              = "subnet-with-service-endpoint"
+    address_prefixes  = ["10.0.3.0/24"]
+    service_endpoints = ["Microsoft.Storage"]
   }
 ]
