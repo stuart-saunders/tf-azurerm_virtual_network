@@ -8,12 +8,12 @@ variable "resource_group_location" {
   description = "(Required) The Azure region in which the Resource Group should be created"
 }
 
-variable "virtual_network_name" {
+variable "name" {
   type        = string
   description = "(Required) The name of the Virtual Network to create"
 }
 
-variable "virtual_network_location" {
+variable "location" {
   type        = string
   description = "(Optional) The Azure region in which the Virtual Network should be created"
   default     = null
@@ -58,7 +58,7 @@ variable "subnets" {
   type = list(object({
     name             = string
     address_prefixes = list(string)
-    
+
     delegation = optional(object({
       name = string
       service_delegation = object({
@@ -69,13 +69,12 @@ variable "subnets" {
 
     private_endpoint_network_policies_enabled     = optional(bool, true)
     private_link_service_network_policies_enabled = optional(bool, true)
-    
-    service_endpoints                             = optional(list(string), null)
-    service_endpoint_policy_ids                   = optional(list(string), null)
-    
+
+    service_endpoints           = optional(list(string), null)
+    service_endpoint_policy_ids = optional(list(string), null)
+
     nsgs = optional(list(object({
-      name                = string
-      # resource_group_name = string
+      name = string
       rules = list(object({
         name                       = string
         priority                   = string
@@ -88,11 +87,18 @@ variable "subnets" {
         destination_address_prefix = string
       }))
     })), [])
-    
+
     route_tables = optional(list(object({
-      name                = string
-      resource_group_name = string
+      name                          = string
+      disable_bgp_route_propagation = optional(bool, false)
+
+      routes = list(object({
+        name           = string
+        address_prefix = string
+        next_hop_type  = string
+      }))
     })), [])
+
   }))
   description = "(Required) The Subnet(s) to create within the Virtual Network"
 }

@@ -1,6 +1,6 @@
 resource "azurerm_virtual_network" "this" {
-  name                = var.virtual_network_name
-  location            = var.virtual_network_location != null ? var.virtual_network_location : var.resource_group_location
+  name                = var.name
+  location            = var.location != null ? var.location : var.resource_group_location
   resource_group_name = var.resource_group_name
   address_space       = var.address_space
 
@@ -20,8 +20,7 @@ resource "azurerm_virtual_network" "this" {
 }
 
 resource "azurerm_virtual_network_dns_servers" "this" {
-  # count = length(var.dns_servers) > 0 ? 1 : 0
-  for_each = length(var.dns_servers) > 0 ? [1] : []
+  count = length(var.dns_servers) > 0 ? 1 : 0
 
   virtual_network_id = azurerm_virtual_network.this.id
   dns_servers        = var.dns_servers
@@ -40,7 +39,7 @@ resource "azurerm_subnet" "this" {
 
     content {
       name = each.value.delegation.name
-      
+
       service_delegation {
         name    = each.value.delegation.service_delegation.name
         actions = each.value.delegation.service_delegation.actions
@@ -51,13 +50,6 @@ resource "azurerm_subnet" "this" {
   private_endpoint_network_policies_enabled     = each.value.private_endpoint_network_policies_enabled
   private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
 
-  service_endpoints = each.value.service_endpoints
-  #service_endpoint_policy_ids = each.value.service_endpoint_policy_ids
+  service_endpoints           = each.value.service_endpoints
+  service_endpoint_policy_ids = each.value.service_endpoint_policy_ids
 }
-
-# resource "azurerm_subnet_route_table_association" "vnet" {
-#   for_each = local.route_table_associations
-
-#   route_table_id = data.azurerm_route_table.this[each.key].id
-#   subnet_id      = azurerm_subnet.this[each.value.subnet_name].id
-# }
