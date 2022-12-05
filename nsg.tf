@@ -1,7 +1,7 @@
 resource "azurerm_network_security_group" "this" {
   for_each = local.nsgs
 
-  name                = each.value.nsg_name
+  name                = each.value.name
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 }
@@ -25,6 +25,6 @@ resource "azurerm_network_security_rule" "this" {
 resource "azurerm_subnet_network_security_group_association" "this" {
   for_each = local.nsgs
 
-  network_security_group_id = azurerm_network_security_group.this[each.key].name
+  network_security_group_id = azurerm_network_security_group.this[each.key].id
   subnet_id                 = azurerm_subnet.this[each.value.subnet_name].id
 }
