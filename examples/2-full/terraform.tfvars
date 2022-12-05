@@ -1,7 +1,7 @@
 resource_group_name     = "rg-vnet-module-test"
 resource_group_location = "uksouth"
 
-virtual_network_name = "vnet0"
+virtual_network_name = "example2-vnet"
 address_space        = ["10.0.0.0/16"]
 
 subnets = [
@@ -23,20 +23,15 @@ subnets = [
     name             = "subnet-with-nsg"
     address_prefixes = ["10.0.1.0/24"]
     nsgs = [
-      # {
-      #   name = "nsg0"
-      #   resource_group_name = "rg-vnet-module-test"
-      # }
       {
         name = "nsg0"
-        #resource_group_name = "rg-vnet-module-test"
         rules = [
           {
             name                       = "winrm",
             priority                   = "1001"
             direction                  = "Inbound"
             access                     = "Allow"
-            protocol                   = "tcp"
+            protocol                   = "Tcp"
             source_port_range          = "*"
             destination_port_range     = "5985"
             source_address_prefix      = "VirtualNetwork"
@@ -47,7 +42,7 @@ subnets = [
             priority                   = "1002"
             direction                  = "Inbound"
             access                     = "Allow"
-            protocol                   = "tcp"
+            protocol                   = "Tcp"
             source_port_range          = "*"
             destination_port_range     = "80"
             source_address_prefix      = "*"
@@ -62,8 +57,14 @@ subnets = [
     address_prefixes = ["10.0.2.0/24"]
     route_tables = [
       {
-        name                = "rt0"
-        resource_group_name = "rg-vnet-module-test"
+        name = "no-internet-rt"
+        routes = [
+          {
+            name           = "no-internet"
+            address_prefix = "0.0.0.0/0"
+            next_hop_type  = "None"
+          }
+        ]
       }
     ]
   },

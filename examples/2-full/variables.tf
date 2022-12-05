@@ -53,15 +53,16 @@ variable "subnets" {
     })), [])
 
     route_tables = optional(list(object({
-      name                = string
-      resource_group_name = string
+      name                          = string
+      disable_bgp_route_propagation = optional(bool, false)
+
+      routes = list(object({
+        name           = string
+        address_prefix = string
+        next_hop_type  = string
+      }))
     })), [])
+
   }))
   description = "The Subnet(s) to create within the Virtual Network"
-}
-
-variable "subnet_nsg_map" {
-  type        = map(string)
-  description = "A map of Subnet and NSG names"
-  default     = {}
 }
