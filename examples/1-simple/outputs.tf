@@ -3,9 +3,9 @@ output "virtual_network_id" {
 }
 
 output "subnets" {
-  value = [ for v in module.vnet.subnets :
+  value = [for v in module.vnet.subnets :
     {
-      id = v.id
+      id   = v.id
       name = v.name
     }
   ]
