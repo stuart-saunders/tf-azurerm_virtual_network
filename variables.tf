@@ -8,20 +8,69 @@ variable "resource_group_location" {
   description = "(Required) The Azure region in which the Resource Group should be created"
 }
 
-variable "name" {
-  type        = string
-  description = "(Required) The name of the Virtual Network to create"
-}
+variable "vnet" {
+  type = object({
+    name          = string
+    location      = optional(string, null)
+    address_space = list(string)
 
-variable "location" {
-  type        = string
-  description = "(Optional) The Azure region in which the Virtual Network should be created"
-  default     = null
-}
+    subnets = list(object({
+      name             = string
+      address_prefixes = list(string)
 
-variable "address_space" {
-  type        = list(string)
-  description = "(Required) The list of address spaces used by the Virtual Network"
+      delegation = optional(object({
+        name = optional(string, null)
+        service_delegation = optional(object({
+          name    = optional(string, null)
+          actions = optional(list(string), null)
+        }), null)
+      }), null)
+
+      private_endpoint_network_policies_enabled     = optional(bool, true)
+      private_link_service_network_policies_enabled = optional(bool, true)
+
+      service_endpoints           = optional(list(string), null)
+      service_endpoint_policy_ids = optional(list(string), null)
+
+      nsgs = optional(list(object({
+        name = string
+        rules = optional(list(object({
+          name                       = string
+          priority                   = string
+          direction                  = string
+          access                     = string
+          protocol                   = string
+          source_port_range          = string
+          destination_port_range     = string
+          source_address_prefix      = string
+          destination_address_prefix = string
+        })), null)
+      })), [])
+
+      existing_nsgs = optional(list(object({
+        name                = string
+        resource_group_name = optional(string, null)
+      })), [])
+
+      route_tables = optional(list(object({
+        name                          = string
+        disable_bgp_route_propagation = optional(bool, false)
+
+        routes = optional(list(object({
+          name           = string
+          address_prefix = optional(string)
+          next_hop_type  = optional(string)
+        })), [])
+      })), [])
+
+      existing_route_tables = optional(list(object({
+        name                = string
+        resource_group_name = optional(string, null)
+      })), [])
+
+    }))
+  })
+  description = "The Virtual Network to create"
 }
 
 variable "dns_servers" {
@@ -52,55 +101,6 @@ variable "flow_timeout_in_minutes" {
   type        = number
   description = "(Optional) The flow timeout in minutes for the Virtual Network, which is used to enable connection tracking for intra-VM flows. Possible values are between 4 and 30 minutes."
   default     = null
-}
-
-variable "subnets" {
-  type = list(object({
-    name             = string
-    address_prefixes = list(string)
-
-    delegation = optional(object({
-      name = string
-      service_delegation = object({
-        name    = string
-        actions = list(string)
-      })
-    }), null)
-
-    private_endpoint_network_policies_enabled     = optional(bool, true)
-    private_link_service_network_policies_enabled = optional(bool, true)
-
-    service_endpoints           = optional(list(string), null)
-    service_endpoint_policy_ids = optional(list(string), null)
-
-    nsgs = optional(list(object({
-      name = string
-      rules = list(object({
-        name                       = string
-        priority                   = string
-        direction                  = string
-        access                     = string
-        protocol                   = string
-        source_port_range          = string
-        destination_port_range     = string
-        source_address_prefix      = string
-        destination_address_prefix = string
-      }))
-    })), [])
-
-    route_tables = optional(list(object({
-      name                          = string
-      disable_bgp_route_propagation = optional(bool, false)
-
-      routes = list(object({
-        name           = string
-        address_prefix = string
-        next_hop_type  = string
-      }))
-    })), [])
-
-  }))
-  description = "(Required) The Subnet(s) to create within the Virtual Network"
 }
 
 variable "tags" {

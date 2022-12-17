@@ -25,3 +25,11 @@ resource "azurerm_subnet_route_table_association" "this" {
   route_table_id = azurerm_route_table.this[each.key].id
   subnet_id      = azurerm_subnet.this[each.value.subnet_name].id
 }
+
+resource "azurerm_subnet_route_table_association" "existing" {
+  for_each = local.existing_route_tables
+
+  route_table_id = data.azurerm_route_table.this[each.value.table_key].id
+  subnet_id      = azurerm_subnet.this[each.value.subnet_name].id
+}
+

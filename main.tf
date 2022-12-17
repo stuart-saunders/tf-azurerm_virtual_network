@@ -1,8 +1,8 @@
 resource "azurerm_virtual_network" "this" {
-  name                = var.name
-  location            = var.location != null ? var.location : var.resource_group_location
+  name                = var.vnet.name
+  location            = var.vnet.location == null ? var.resource_group_location : var.vnet.location
   resource_group_name = var.resource_group_name
-  address_space       = var.address_space
+  address_space       = var.vnet.address_space
 
   edge_zone               = var.edge_zone
   flow_timeout_in_minutes = var.flow_timeout_in_minutes
@@ -29,7 +29,7 @@ resource "azurerm_virtual_network_dns_servers" "this" {
 resource "azurerm_subnet" "this" {
   for_each = local.subnets
 
-  name                 = each.value.name
+  name                 = each.key
   resource_group_name  = azurerm_virtual_network.this.resource_group_name
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = each.value.address_prefixes
@@ -47,9 +47,9 @@ resource "azurerm_subnet" "this" {
     }
   }
 
-  private_endpoint_network_policies_enabled     = each.value.private_endpoint_network_policies_enabled
-  private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
+  private_endpoint_network_policies_enabled     = try(each.value.private_endpoint_network_policies_enabled, null)
+  private_link_service_network_policies_enabled = try(each.value.private_link_service_network_policies_enabled, null)
 
-  service_endpoints           = each.value.service_endpoints
-  service_endpoint_policy_ids = each.value.service_endpoint_policy_ids
+  service_endpoints           = try(each.value.service_endpoints, null)
+  service_endpoint_policy_ids = try(each.value.service_endpoint_policy_ids, null)
 }
