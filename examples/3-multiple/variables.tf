@@ -10,19 +10,20 @@ variable "resource_group_location" {
 
 variable "vnets" {
   type = list(object({
-    name          = string
+    name = string
     address_space = list(string)
+    location = optional(string, null)
 
     subnets = list(object({
-      name             = string
+      name = string
       address_prefixes = list(string)
 
       delegation = optional(object({
-        name = string
-        service_delegation = object({
-          name    = string
-          actions = list(string)
-        })
+        name = optional(string, null)
+        service_delegation = optional(object({
+          name    = optional(string, null)
+          actions = optional(list(string), null)
+        }), null)
       }), null)
 
       private_endpoint_network_policies_enabled     = optional(bool, true)
@@ -33,7 +34,7 @@ variable "vnets" {
 
       nsgs = optional(list(object({
         name = string
-        rules = list(object({
+        rules = optional(list(object({
           name                       = string
           priority                   = string
           direction                  = string
@@ -43,19 +44,31 @@ variable "vnets" {
           destination_port_range     = string
           source_address_prefix      = string
           destination_address_prefix = string
-        }))
+        })), null)
+      })), null)
+
+      existing_nsgs = optional(list(object({
+        name                = string
+        resource_group_name = optional(string, null)
       })), [])
 
       route_tables = optional(list(object({
-        name                          = string
+        name = string
         disable_bgp_route_propagation = optional(bool, false)
 
-        routes = list(object({
-          name           = string
-          address_prefix = string
-          next_hop_type  = string
-        }))
+        routes = optional(list(object({
+          name = string
+          address_prefix = optional(string)
+          next_hop_type  = optional(string)
+        })), [])
       })), [])
+
+      existing_route_tables = optional(list(object({
+        name                = string
+        resource_group_name = optional(string, null)
+      })), [])
+
+
     }))
   }))
   description = "The Virtual Networks to create"

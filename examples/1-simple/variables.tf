@@ -8,28 +8,25 @@ variable "resource_group_location" {
   description = "The Azure region in which the Resource Group should be created"
 }
 
-variable "virtual_network_name" {
-  type        = string
-  description = "The name of the Virtual Network to create"
-}
-
-variable "address_space" {
-  type        = list(string)
-  description = "The list of address spaces used by the Virtual Network"
-}
-
-variable "subnets" {
+variable "vnets" {
   type = list(object({
-    name             = string
-    address_prefixes = list(string)
+    name          = string
+    location      = optional(string, null)
+    address_space = list(string)
 
-    delegation = optional(object({
+    subnets = list(object({
       name = string
-      service_delegation = object({
-        name    = string
-        actions = list(string)
-      })
-    }), null)
+      address_prefixes = list(string)
+
+      delegation = optional(object({
+        name = string
+        service_delegation = object({
+          name    = string
+          actions = list(string)
+        })
+      }), null)
+    
+    }))
 
     private_endpoint_network_policies_enabled     = optional(bool, true)
     private_link_service_network_policies_enabled = optional(bool, true)
@@ -50,7 +47,11 @@ variable "subnets" {
         source_address_prefix      = string
         destination_address_prefix = string
       }))
+    })), [])
 
+    existing_nsgs = optional(list(object({
+      name                = string
+      resource_group_name = optional(string, null)
     })), [])
 
     route_tables = optional(list(object({
@@ -65,5 +66,5 @@ variable "subnets" {
     })), [])
 
   }))
-  description = "The Subnet(s) to create within the Virtual Network"
+  description = "The Virtual Networks to create"
 }
