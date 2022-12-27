@@ -29,9 +29,9 @@ resource "azurerm_subnet_network_security_group_association" "this" {
   subnet_id                 = azurerm_subnet.this[each.value.subnet_name].id
 }
 
-resource "azurerm_subnet_network_security_group_association" "existing" {
-  for_each = local.existing_nsgs
+resource "azurerm_subnet_network_security_group_association" "external_nsg" {
+  for_each = local.nsg_ids
 
-  network_security_group_id = data.azurerm_network_security_group.this[each.value.nsg_key].id
+  network_security_group_id = each.value.id
   subnet_id                 = azurerm_subnet.this[each.value.subnet_name].id
 }

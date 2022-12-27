@@ -1,6 +1,6 @@
 locals {
 
-  subnets = { for subnet in var.vnet.subnets :
+  subnets = { for subnet in var.subnets :
     subnet.name => subnet
   }
 
@@ -35,15 +35,13 @@ locals {
     }
   ]...)
 
-  existing_nsgs = merge([for subnet_key, subnet in local.subnets :
+  nsg_ids = merge([ for subnet_key, subnet in local.subnets : 
     {
-      for nsg in subnet.existing_nsgs :
-      "${subnet_key}_${nsg.name}" => {
-        name                = nsg.name
-        nsg_key             = "${subnet_key}_${nsg.name}"
-        resource_group_name = try(nsg.resource_group_name, null)
-        subnet_name         = subnet.name
-      }
+      for id in subnet.nsg_ids :
+        "${id}_${subnet_key}" => {
+          id = id
+          subnet_name = subnet.name
+        }
     }
   ]...)
 
@@ -72,15 +70,13 @@ locals {
     }
   ]...)
 
-  existing_route_tables = merge([for subnet_key, subnet in local.subnets :
+  route_table_ids = merge([ for subnet_key, subnet in local.subnets : 
     {
-      for table in subnet.existing_route_tables :
-      "${subnet_key}_${table.name}" => {
-        name                = table.name
-        table_key           = "${subnet_key}_${table.name}"
-        resource_group_name = try(table.resource_group_name, null)
-        subnet_name         = subnet.name
-      }
+      for id in subnet.route_table_ids :
+        "${id}_${subnet_key}" => {
+          id = id
+          subnet_name = subnet.name
+        }
     }
   ]...)
 

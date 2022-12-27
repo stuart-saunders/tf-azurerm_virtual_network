@@ -1,8 +1,8 @@
 resource "azurerm_virtual_network" "this" {
-  name                = var.vnet.name
-  location            = var.vnet.location == null ? var.resource_group_location : var.vnet.location
+  name                = var.name
+  location            = var.location == null ? var.resource_group_location : var.location
   resource_group_name = var.resource_group_name
-  address_space       = var.vnet.address_space
+  address_space       = var.address_space
 
   edge_zone               = var.edge_zone
   flow_timeout_in_minutes = var.flow_timeout_in_minutes
