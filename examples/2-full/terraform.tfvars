@@ -23,13 +23,9 @@ vnets = [
       },
       {
         name = "subnet-with-existing-nsg"
-        address_prefixes = ["10.0.1.0/24"]
-        
-        existing_nsgs = [
-          {
-            name = "existing_nsg_0"
-            resource_group_name = "existing-rg"
-          }
+        address_prefixes = ["10.0.1.0/24"]        
+        nsg_ids = [
+          "/subscriptions/<subscription_id>/resourceGroups/existing-rg/providers/Microsoft.Network/networkSecurityGroups/existing_nsg_0"
         ]
       },
       {
@@ -51,12 +47,8 @@ vnets = [
       {
         name = "subnet-with-existing-route-table"
         address_prefixes = ["10.0.3.0/24"]
-        
-        existing_route_tables = [
-          {
-            name = "existing_rt_0"
-            resource_group_name = "existing-rg"
-          }
+        route_table_ids = [
+          "/subscriptions/<subscription_id>/resourceGroups/existing-rg/providers/Microsoft.Network/routeTables/existing_rt_0"
         ]
       },
       {

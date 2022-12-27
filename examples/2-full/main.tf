@@ -37,7 +37,10 @@ module "vnet" {
   resource_group_name     = azurerm_resource_group.this.name
   resource_group_location = azurerm_resource_group.this.location
 
-  vnet = each.value
+  name = each.value.name
+  address_space = each.value.address_space
+
+  subnets = each.value.subnets
 
   depends_on = [    
     module.existing_nsg,

@@ -47,11 +47,8 @@ variable "vnets" {
         })), null)
       })), null)
 
-      existing_nsgs = optional(list(object({
-        name                = string
-        resource_group_name = optional(string, null)
-      })), [])
-
+      nsg_ids = optional(list(string), [])
+      
       route_tables = optional(list(object({
         name = string
         disable_bgp_route_propagation = optional(bool, false)
@@ -63,12 +60,7 @@ variable "vnets" {
         })), [])
       })), [])
 
-      existing_route_tables = optional(list(object({
-        name                = string
-        resource_group_name = optional(string, null)
-      })), [])
-
-
+      route_table_ids = optional(list(string), [])
     }))
   }))
   description = "The Virtual Networks to create"
@@ -89,7 +81,7 @@ variable "nsgs" {
         destination_address_prefix = string
       }))
   }))
-  description = "Network Security Groups used by to this configuration"
+  description = "The Network Security Groups created outside of the module"
 }
 
 variable "route_tables" {
@@ -103,5 +95,5 @@ variable "route_tables" {
       next_hop_type  = string
     }))
   }))
-  description = "The Route Tables used by this configuration"
+  description = "The Route Tables created outside of the module"
 }
