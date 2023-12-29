@@ -3,11 +3,6 @@ variable "resource_group_name" {
   description = "(Required) The name the Resource Group in which to create the Virtual Network"
 }
 
-variable "resource_group_location" {
-  type        = string
-  description = "(Required) The Azure region in which the Resource Group should be created"
-}
-
 variable "name" {
   type = string
   description = "The name of the Virtual Network to create"

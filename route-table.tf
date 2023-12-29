@@ -2,7 +2,7 @@ resource "azurerm_route_table" "this" {
   for_each = local.route_tables
 
   name                          = each.value.name
-  location                      = var.resource_group_location
+  location                      = var.location
   resource_group_name           = var.resource_group_name
   disable_bgp_route_propagation = each.value.disable_bgp_route_propagation
 
