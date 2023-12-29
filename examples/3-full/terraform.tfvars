@@ -1,9 +1,9 @@
-resource_group_name     = "rg-vnet-module-test"
+resource_group_name     = "rg-vnet-module-example-3"
 resource_group_location = "uksouth"
 
 vnets = [
   {
-    name = "example2-vnet0"
+    name = "example3-vnet0"
     address_space = ["10.0.0.0/16"]
 
     subnets = [
@@ -59,7 +59,7 @@ vnets = [
     ]
   },
   {
-    name = "example2-vnet1"
+    name = "example3-vnet1"
     address_space = ["10.1.0.0/16"]
 
     subnets = [

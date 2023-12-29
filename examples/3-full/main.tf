@@ -35,7 +35,7 @@ module "vnet" {
   for_each = { for vnet in var.vnets : vnet.name => vnet }
 
   resource_group_name     = azurerm_resource_group.this.name
-  resource_group_location = azurerm_resource_group.this.location
+  location = azurerm_resource_group.this.location
 
   name = each.value.name
   address_space = each.value.address_space

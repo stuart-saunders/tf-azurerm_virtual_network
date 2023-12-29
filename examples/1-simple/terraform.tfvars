@@ -1,4 +1,4 @@
-resource_group_name     = "rg-vnet-module-test"
+resource_group_name     = "rg-vnet-module-example-1"
 resource_group_location = "uksouth"
 
 vnet = {

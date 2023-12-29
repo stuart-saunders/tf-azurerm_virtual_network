@@ -5,14 +5,14 @@ resource "azurerm_resource_group" "this" {
 
 module "vnet" {
   source   = "../../"
-  for_each = { for vnet in var.vnets : vnet.name => vnet }
+  for_each = local.vnets
 
   resource_group_name     = azurerm_resource_group.this.name
-  resource_group_location = azurerm_resource_group.this.location
+  location = azurerm_resource_group.this.location
 
-  vnet = each.value
+  name          = each.value.name
+  address_space = each.value.address_space
+  subnets       = each.value.subnets
 
-  depends_on = [
-    azurerm_resource_group.this
-  ]
+
 }
