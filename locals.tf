@@ -1,5 +1,9 @@
 locals {
 
+  peerings = { for peering in var.peerings : 
+    peering.remote_virtual_network_name => peering
+  }
+
   subnets = { for subnet in var.subnets :
     subnet.name => subnet
   }
