@@ -19,6 +19,16 @@ variable "address_space" {
   description = "The address space(s) used by the Virtual Network"
 }
 
+variable "peerings" {
+  type = list(object({
+    remote_virtual_network_name                = string
+    remote_virtual_network_resource_group_name = optional(string, null)
+    remote_virtual_network_id                  = optional(string, null)
+  }))
+  description = "List of the Remote Virtual Network details"
+  default     = []
+}
+
 variable "subnets" {
   type = list(object({
     name             = string
@@ -100,25 +110,6 @@ variable "flow_timeout_in_minutes" {
   type        = number
   description = "(Optional) The flow timeout in minutes for the Virtual Network, which is used to enable connection tracking for intra-VM flows. Possible values are between 4 and 30 minutes."
   default     = null
-}
-
-variable "peerings" {
-  type = list(object({
-    remote_virtual_network_name                = string
-    remote_virtual_network_resource_group_name = optional(string, null)
-    remote_virtual_network_id                  = optional(string, null)
-  }))
-  description = "List of the Remote Virtual Network details"
-  default     = []
-}
-
-variable "peerings_by_id" {
-  type = list(object({
-    remote_virtual_network_name = string
-    remote_virtual_network_id   = string
-  }))
-  description = "List of the Remote Virtual Network Ids"
-  default     = []
 }
 
 variable "tags" {
