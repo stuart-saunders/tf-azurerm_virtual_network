@@ -8,8 +8,8 @@ variable "resource_group_location" {
   description = "The Azure region in which the Resource Group should be created"
 }
 
-variable "vnets" {
-  type = list(object({
+variable "vnet" {
+  type = object({
     name          = string
     location      = optional(string, null)
     address_space = list(string)
@@ -65,6 +65,6 @@ variable "vnets" {
       }))
     })), [])
 
-  }))
-  description = "The Virtual Networks to create"
+  })
+  description = "The Virtual Network to create"
 }
